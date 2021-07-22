@@ -26,3 +26,21 @@ export async function upvote (id: number, newScore: number) {
     return upvote.rows;
 }
 
+export async function downvote (id: number, newScore: number) {
+    const upvote = await connection.query(`
+    UPDATE recommendations
+    SET score = $1 
+    WHERE id = $2
+    `, [newScore, id]);
+  
+    return upvote.rows;
+}
+
+export async function deleteRecommendation (id: number) {
+    const upvote = await connection.query(`
+    DELETE FROM recommendations    
+    WHERE id = $1
+    `, [id]);
+  
+    return upvote.rows;
+}

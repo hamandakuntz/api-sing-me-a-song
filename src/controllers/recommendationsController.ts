@@ -34,3 +34,15 @@ export async function upvoteRecommendation (req: Request, res: Response) {
         res.sendStatus(500);
     }
 }
+
+export async function downvoteRecommendation (req: Request, res: Response) {
+    try {
+        const id = Number(req.params.id);
+        const result = await recommendationsService.downvote(id);
+        res.send(result);      
+
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+}
