@@ -51,7 +51,6 @@ export async function generateRecommendation() {
 
 export async function generateUpvote () {   
     const result = await generateRecommendation();
-    console.log(result);
     const score = result.score;    
     let newScore = score+1; 
     
@@ -59,8 +58,26 @@ export async function generateUpvote () {
     UPDATE recommendations
     SET score = $1 
     WHERE id = $2
+    RETURNING id
     `, [newScore, result.id]);
   
-    return upvote.rows;
+    return upvote.rows[0];
 }
+
+
+export async function generateDownvote () {   
+    const result = await generateRecommendation();
+    const score = result.score;    
+    let newScore = score-1; 
+    
+    const upvote = await connection.query(`
+    UPDATE recommendations
+    SET score = $1 
+    WHERE id = $2
+    RETURNING id
+    `, [newScore, result.id]);
+  
+    return upvote.rows[0];
+}
+
 

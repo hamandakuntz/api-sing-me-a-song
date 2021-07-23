@@ -31,15 +31,32 @@ describe("post /recommendations", () => {
 describe("post /recommendations/:id/upvote", () => {
   it("should answer an updated object when an upvote is send", async () => {
 
-    const body = await recommendationFactory.generateInvalidBodyAndPost();
+    await recommendationFactory.generateUpvote();
 
-    const result = await supertest(app).post("/recommendations").send(body);
+    const result = await supertest(app).post(`/recommendations/1/upvote`);
 
     expect(result.body).toEqual(expect.objectContaining({
-      
-      
+      id: expect.any(Number),
+      name: expect.any(String),
+      youtubeLink: expect.any(String),      
+      score: expect.any(Number)            
     }));
   });
+});
 
+describe("post /recommendations/:id/downvote", () => {
+  it("should answer an updated object when a downvote is send", async () => {
+
+    await recommendationFactory.generateDownvote();
+
+    const result = await supertest(app).post(`/recommendations/1/downvote`);
+
+    expect(result.body).toEqual(expect.objectContaining({
+      id: expect.any(Number),
+      name: expect.any(String),
+      youtubeLink: expect.any(String),      
+      score: expect.any(Number)            
+    }));
+  });
 });
 

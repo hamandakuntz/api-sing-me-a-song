@@ -17,7 +17,7 @@ export async function downvote (id: number) {
         await recommendationsRepository.deleteRecommendation(id);        
     }
 
-    await recommendationsRepository.downvote(id, newScore);
+    return await recommendationsRepository.downvote(id, newScore);
 }
 
 export async function getRecommendations () {
