@@ -76,3 +76,11 @@ export async function checkTheRecommendationsTable() {
 
     return response.rowCount;
 }
+
+export async function getTopRecommendations (amount: number) {
+    const getTopRecommendations = await connection.query(`
+    SELECT * FROM recommendations
+    ORDER BY score DESC LIMIT $1`, [amount]);
+    console.log(getTopRecommendations.rows)
+    return getTopRecommendations.rows;
+}

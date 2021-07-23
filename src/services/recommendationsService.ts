@@ -57,3 +57,7 @@ export async function getRecommendations () {
         return false;
     }    
 }
+
+export async function getTopRecommendations (amount: number) {
+    return await recommendationsRepository.getTopRecommendations(amount);
+}

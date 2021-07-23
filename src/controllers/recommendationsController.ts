@@ -57,3 +57,15 @@ export async function getRecommendations (req: Request, res: Response) {
         res.sendStatus(500);
     }
 }
+
+export async function getTopRecommendations (req: Request, res: Response) {
+    try {
+        const amount = Number(req.params.amount);
+        const result = await recommendationsService.getTopRecommendations(amount);
+        if(!result) res.sendStatus(404);
+        res.send(result);
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+}
