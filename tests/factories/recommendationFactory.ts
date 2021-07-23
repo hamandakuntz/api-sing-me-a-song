@@ -3,7 +3,7 @@ import connection from "../../src/database";
 
 export async function generateValidBodyAndPost () {
     const recommendation = {
-        name: "Bad Romance - Lady Gaga",
+        name: "Test Music",
         youtubeLink: "https://www.youtube.com/watch?v=qrO4YZeyl0I"
     }
 
@@ -19,7 +19,7 @@ export async function generateValidBodyAndPost () {
 
 export async function generateInvalidBodyAndPost () {
     const recommendation = {
-        name: "Bad Romance - Lady Gaga",
+        name: "Test Music",
         youtubeLink: "https://www.lala.com/watch?v=qrO4YZeyl0I"
     }
 
@@ -33,10 +33,10 @@ export async function generateInvalidBodyAndPost () {
     return result.rows[0];
 }
 
-export async function generateRecommendation() {
+export async function generateRecommendation(score: number) {
     const recommendation = {
-        name: "Bad Romance - Lady Gaga",
-        youtubeLink: "https://www.youtube.com/watch?v=qrO4YZeyl0I"
+        name: "Test Music",
+        youtubeLink: "https://www.youtube.com/"
     }
 
     const result = await connection.query(`
@@ -44,13 +44,13 @@ export async function generateRecommendation() {
     (name, "youtubeLink", score)
     VALUES ($1, $2, $3)
     RETURNING *
-    `, [recommendation.name, recommendation.youtubeLink, 0]);
+    `, [recommendation.name, recommendation.youtubeLink, score]);
 
     return result.rows[0]
 }
 
 export async function generateUpvote () {   
-    const result = await generateRecommendation();
+    const result = await generateRecommendation(3);
     const score = result.score;    
     let newScore = score+1; 
     
@@ -66,7 +66,7 @@ export async function generateUpvote () {
 
 
 export async function generateDownvote () {   
-    const result = await generateRecommendation();
+    const result = await generateRecommendation(3);
     const score = result.score;    
     let newScore = score-1; 
     
@@ -80,7 +80,7 @@ export async function generateDownvote () {
     return upvote.rows[0];
 }
 
-export async function generateListOfAllRecommendations() {
+export async function generateMusicRecommendation() {
 
     await generateValidBodyAndPost();    
 
@@ -90,11 +90,31 @@ export async function generateListOfAllRecommendations() {
 
 
     const recommendations = await connection.query(`
-        SELECT * FROM recommendations    
-        ORDER BY NEWID()
+        SELECT * FROM recommendations         
+        ORDER BY RANDOM()
+        LIMIT 1 
     `);
 
-    console.log(recommendations)
-    return recommendations.rows;
+    return recommendations.rows[0];
 }
 
+export async function checkTheRecommendationsTable() {
+    const response = await connection.query(`SELECT COUNT(*) AS RowCnt
+    FROM recommendations`);
+
+    return response.rowCount;
+}
+
+export async function getTopRecommendations() {
+
+    await generateRecommendation(3);
+    await generateRecommendation(4);
+    await generateRecommendation(5);   
+
+    const getTopRecommendations = await connection.query(`
+    SELECT * FROM recommendations
+    ORDER BY score DESC LIMIT $1`, [3]);
+    
+    return getTopRecommendations.rows; 
+    
+}

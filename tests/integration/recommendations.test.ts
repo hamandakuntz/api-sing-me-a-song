@@ -60,12 +60,12 @@ describe("post /recommendations/:id/downvote", () => {
   });
 });
 
-describe("post /recommendations/random", () => {
+describe("get /recommendations/random", () => {
   it("should answer an with an object containing all of recommendations randomcally", async () => {
 
-    await recommendationFactory.generateListOfAllRecommendations();
+    await recommendationFactory.generateMusicRecommendation();
 
-    const result = await supertest(app).post(`/recommendations/random`);
+    const result = await supertest(app).get(`/recommendations/random`);
 
     expect(result.body).toEqual(expect.objectContaining({
       id: expect.any(Number),
@@ -74,5 +74,28 @@ describe("post /recommendations/random", () => {
       score: expect.any(Number)            
     }));
   });
+
+  it("should answer 404 for an empty recommendation table", async () => {
+
+    await recommendationFactory.checkTheRecommendationsTable();
+
+    const result = await supertest(app).get(`/recommendations/random`);
+
+    expect(result.status).toEqual(404);
+  });
 });
 
+describe("get /recommendations/top/:amount", () => {
+  it("should answer the list of recommendations", async () => {
+
+    await recommendationFactory.getTopRecommendations();
+
+    const result = await supertest(app).get(`/recommendations/top/3`);
+
+    expect(result.body).toEqual([
+      { id: 3, name: "Test Music", youtubeLink: "https://www.youtube.com/", score: 5 },
+      { id: 2, name: "Test Music", youtubeLink: "https://www.youtube.com/", score: 4 },
+      { id: 1, name: "Test Music", youtubeLink: "https://www.youtube.com/", score: 3 },
+    ]);
+  });
+});
