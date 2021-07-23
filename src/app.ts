@@ -10,5 +10,6 @@ app.use(express.json());
 app.post("/recommendations", recommendationsController.postRecommendation);
 app.post("/recommendations/:id/upvote", recommendationsController.upvoteRecommendation);
 app.post("/recommendations/:id/downvote", recommendationsController.downvoteRecommendation);
+app.get("/recommendations/random", recommendationsController.getRecommendations);
 
 export default app;

@@ -46,3 +46,14 @@ export async function downvoteRecommendation (req: Request, res: Response) {
         res.sendStatus(500);
     }
 }
+
+export async function getRecommendations (req: Request, res: Response) {
+    try {
+        const result = await recommendationsService.getRecommendations();
+        if(!result) res.sendStatus(404);
+        res.send(result);
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+}
