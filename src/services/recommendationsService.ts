@@ -34,11 +34,11 @@ export async function getRecommendations () {
             const percent = 30;
             result = await recommendationsRepository.getRecommendationsPercent(percent);
 
-            if(!!result) {
+            if(result.rowCount === 0) {
                 console.log("entrei no randomico 30%")
                 response = recommendationsRepository.getRecommendationRandomically();                 
             } else {
-                response = result;
+                response = result.rows[0];
             }   
 
         } else if (percentage < 0.7){
@@ -46,13 +46,14 @@ export async function getRecommendations () {
             console.log("70 por cento");
 
             const percent = 70;            
-            result = await recommendationsRepository.getRecommendationsPercent(percent);                      
+            result = await recommendationsRepository.getRecommendationsPercent(percent);  
+              
 
-            if(!!result) {
+            if(result.rowCount === 0) {
                 console.log("entrei no randomico 70%")
                 response = recommendationsRepository.getRecommendationRandomically();                 
             } else {
-                response = result;
+                response = result.rows[0];
             }        
         }         
         
