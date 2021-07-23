@@ -114,7 +114,6 @@ export async function getTopRecommendations() {
     const getTopRecommendations = await connection.query(`
     SELECT * FROM recommendations
     ORDER BY score DESC LIMIT $1`, [3]);
-    
-    return getTopRecommendations.rows; 
-    
+
+    return getTopRecommendations.rows;     
 }
