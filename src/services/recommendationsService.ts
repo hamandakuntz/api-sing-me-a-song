@@ -5,7 +5,7 @@ export async function upvote (id: number) {
 
     let newScore = score+1; 
 
-    await recommendationsRepository.upvote(id, newScore);
+    return await recommendationsRepository.upvote(id, newScore);
 }
 
 export async function downvote (id: number) {
@@ -37,9 +37,8 @@ export async function getRecommendations () {
             const percent = 70;
             response = await recommendationsRepository.getRecommendationsPercent(percent);      
             console.log("70 por cento");
-        } else {
-            const percentToSort = 0;
-            response = await recommendationsRepository.getRecommendationsPercent(percentToSort);   
+        } else {           
+            response = await recommendationsRepository.getRecommendationsPercent();   
             console.log("musica sorteada")     
         }
 

@@ -28,7 +28,6 @@ export async function upvoteRecommendation (req: Request, res: Response) {
         const id = Number(req.params.id);
         const result = await recommendationsService.upvote(id);
         res.send(result);      
-
     } catch(e) {
         console.log(e);
         res.sendStatus(500);

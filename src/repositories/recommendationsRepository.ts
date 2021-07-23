@@ -21,9 +21,12 @@ export async function upvote (id: number, newScore: number) {
     UPDATE recommendations
     SET score = $1 
     WHERE id = $2
+    RETURNING *
     `, [newScore, id]);
+
+    console.log(upvote.rows[0])
   
-    return upvote.rows;
+    return upvote.rows[0];
 }
 
 export async function downvote (id: number, newScore: number) {
@@ -45,13 +48,13 @@ export async function deleteRecommendation (id: number) {
     return deleted.rows;
 }
 
-export async function getRecommendationsPercent (percent: number) {
+export async function getRecommendationsPercent (percent?: number) {
     let recommendations = null;
 
     if (percent === 70) {
         recommendations = await connection.query(`
             SELECT * FROM recommendations    
-            WHERE score BETWEEN 10 AND 20            
+            WHERE score > 10            
         `);
         console.log(recommendations)
     } else if(percent === 30) {
