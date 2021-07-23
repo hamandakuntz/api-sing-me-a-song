@@ -80,4 +80,21 @@ export async function generateDownvote () {
     return upvote.rows[0];
 }
 
+export async function generateListOfAllRecommendations() {
+
+    await generateValidBodyAndPost();    
+
+    await generateValidBodyAndPost();    
+
+    await generateValidBodyAndPost();    
+
+
+    const recommendations = await connection.query(`
+        SELECT * FROM recommendations    
+        ORDER BY NEWID()
+    `);
+
+    console.log(recommendations)
+    return recommendations.rows;
+}
 

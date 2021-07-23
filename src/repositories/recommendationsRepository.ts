@@ -51,22 +51,30 @@ export async function getRecommendationsPercent (percent?: number) {
 
     if (percent === 70) {
         recommendations = await connection.query(`
-            SELECT * FROM recommendations    
-            WHERE score > 10            
+            SELECT * FROM recommendations           
+            WHERE score > 10  
+            ORDER BY RANDOM()
+            LIMIT 1     
         `);
         } else if(percent === 30) {
         recommendations = await connection.query(`
             SELECT * FROM recommendations  
-            WHERE score BETWEEN -5 AND 10                  
-        `);
-    } else {
-        recommendations = await connection.query(`
-            SELECT * FROM recommendations    
-            ORDER BY NEWID()
-        `);
-    }
+            WHERE score BETWEEN -5 AND 10  
+            ORDER BY RANDOM()
+            LIMIT 1                
+        `)}; 
   
     return recommendations.rows;
+}
+
+export async function getRecommendationRandomically() {
+    const recommendation = await connection.query(`
+        SELECT * FROM recommendations    
+        ORDER BY RANDOM()
+        LIMIT 1
+    `);
+
+    return recommendation.rows[0];
 }
 
 export async function checkTheRecommendationsTable() {

@@ -60,3 +60,19 @@ describe("post /recommendations/:id/downvote", () => {
   });
 });
 
+describe("post /recommendations/random", () => {
+  it("should answer an with an object containing all of recommendations randomcally", async () => {
+
+    await recommendationFactory.generateListOfAllRecommendations();
+
+    const result = await supertest(app).post(`/recommendations/random`);
+
+    expect(result.body).toEqual(expect.objectContaining({
+      id: expect.any(Number),
+      name: expect.any(String),
+      youtubeLink: expect.any(String),      
+      score: expect.any(Number)            
+    }));
+  });
+});
+

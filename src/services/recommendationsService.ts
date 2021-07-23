@@ -23,35 +23,40 @@ export async function downvote (id: number) {
 export async function getRecommendations () {
     const percentage = Math.random();
     const checkTableRows = await recommendationsRepository.checkTheRecommendationsTable();
-    let responseObj = {};
     let response = null;
+    let result = null;
 
     if(checkTableRows !== 0) {
         if(percentage > 0.7) {
             //só acontece 30% das vezes
-            const percent = 30;
-            response = await recommendationsRepository.getRecommendationsPercent(percent);
             console.log("30 por cento");                         
+
+            const percent = 30;
+            result = await recommendationsRepository.getRecommendationsPercent(percent);
+
+            if(!!result) {
+                console.log("entrei no randomico 30%")
+                response = recommendationsRepository.getRecommendationRandomically();                 
+            } else {
+                response = result;
+            }   
+
         } else if (percentage < 0.7){
             //acontece 70% das vezes
-            const percent = 70;
-            response = await recommendationsRepository.getRecommendationsPercent(percent);      
             console.log("70 por cento");
-        } else {           
-            response = await recommendationsRepository.getRecommendationsPercent();   
-            console.log("musica sorteada")     
-        }
 
-        responseObj = response.map((i) => {
-            return {
-                id: i.id,
-		        name: i.name,
-		        youtubeLink: i.youtubeLink,
-		        score: i.score
-            };
-        });     
+            const percent = 70;            
+            result = await recommendationsRepository.getRecommendationsPercent(percent);                      
+
+            if(!!result) {
+                console.log("entrei no randomico 70%")
+                response = recommendationsRepository.getRecommendationRandomically();                 
+            } else {
+                response = result;
+            }        
+        }         
         
-        return responseObj;
+        return response;
     } else {
         return false;
     }    
